@@ -1,4 +1,5 @@
 create database furama_management;
+use furama_management;
 CREATE TABLE vi_tri (
     ma_vi_tri INT,
     ten_vi_tri VARCHAR(45),
@@ -68,7 +69,7 @@ CREATE TABLE dich_vu (
     ma_loai_dich_vu INT,
     tieu_chuan_phong VARCHAR(45),
     mo_ta_tien_nghi_khac VARCHAR(45),
-    dien_tich_ho_boi DOUBLE,
+    dien_tich_ho_boi DOUBLE DEFAULT NULL,
     so_tang INT,
     FOREIGN KEY (ma_kieu_thue)
         REFERENCES kieu_thue (ma_kieu_thue),

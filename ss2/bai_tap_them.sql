@@ -1,40 +1,44 @@
 create database ss2;
 use ss2;
-create table class(
-id int primary key auto_increment,
-name varchar(20)
+CREATE TABLE class (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(20)
 );
 
-create table jame(
-`account` varchar(50) primary key,
-`password` varchar(50)
+CREATE TABLE jame (
+    `account` VARCHAR(50) PRIMARY KEY,
+    `password` VARCHAR(50)
 );
-create table student(
-id int primary key auto_increment,
-name varchar(50),
-birthday date not null,
-gender boolean,
-email varchar(50),
-`point` float,
-class_id int,
-`account` varchar(50) unique,
-foreign key (class_id) references class(id),
-foreign key (`account`) references jame(`account`)
-);
-
-create table instructor(
-id int primary key auto_increment,
-name varchar(50),
-birthday date,
-salary double
+CREATE TABLE student (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50),
+    birthday DATE NOT NULL,
+    gender BOOLEAN,
+    email VARCHAR(50),
+    `point` FLOAT,
+    class_id INT,
+    `account` VARCHAR(50) UNIQUE,
+    FOREIGN KEY (class_id)
+        REFERENCES class (id),
+    FOREIGN KEY (`account`)
+        REFERENCES jame (`account`)
 );
 
-create table instructor_class(
- class_id int,
- instructor_id int,
- primary key (class_id, instructor_id),
- foreign key(class_id) references class(id),
- foreign key(instructor_id) references instructor(id)
+CREATE TABLE instructor (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50),
+    birthday DATE,
+    salary DOUBLE
+);
+
+CREATE TABLE instructor_class (
+    class_id INT,
+    instructor_id INT,
+    PRIMARY KEY (class_id , instructor_id),
+    FOREIGN KEY (class_id)
+        REFERENCES class (id),
+    FOREIGN KEY (instructor_id)
+        REFERENCES instructor (id)
 );
 
 insert into class (name) values ('c1121g1'), ('c1221g1'),('a0821i1'),('a0921i1');
@@ -65,4 +69,6 @@ insert into instructor(`name`,birthday, salary)
 
  insert into instructor_class(class_id,instructor_id) values (1,1),(1,2),(2,1),(2,2),(3,1),(3,2);
 
-
+select * from ss2.student ;
+select * from ss2.student 
+join class on class_id=class.class_id;
