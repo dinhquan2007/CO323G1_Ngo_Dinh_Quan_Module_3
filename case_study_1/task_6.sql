@@ -20,7 +20,7 @@ WHERE
         FROM
             khach_hang
         WHERE
-            dia_chi LIKE '%Vinh%' OR '%Quảng Ngãi%');
+            dia_chi LIKE '%Vinh%' OR '%Quảng Ngãi%')
 
 -- 12
 SELECT 
@@ -81,8 +81,64 @@ HAVING so_luong_thue = (SELECT
         GROUP BY hop_dong_chi_tiet.ma_dich_vu_di_kem) AS bang);
         
         -- 14
-select 
-ma_hop_dong,
-ten_loai_dich_vu,
+        CREATE VIEW bang_liet_ke AS
+    SELECT 
+        dich_vu_di_kem.ma_dich_vu_di_kem,
+        COUNT(dich_vu_di_kem.ma_dich_vu_di_kem) AS so_lan_su_dung
+    FROM
+        dich_vu_di_kem
+    GROUP BY dich_vu_di_kem.ma_dich_vu_di_kem
+;
+SELECT 
+    hop_dong.ma_hop_dong,
+    loai_dich_vu.ten_loai_dich_vu,
+    dich_vu_di_kem.ten_dich_vu_di_kem,
+    bang_liet_ke.so_lan_su_dung
+FROM
+    dich_vu_di_kem
+        JOIN
+    hop_dong_chi_tiet ON dich_vu_di_kem.ma_dich_vu_di_kem = hop_dong_chi_tiet.ma_dich_vu_di_kem
+        JOIN
+    hop_dong ON hop_dong_chi_tiet.ma_hop_dong = hop_dong.ma_hop_dong
+        JOIN
+    dich_vu ON hop_dong.ma_dich_vu = dich_vu.ma_dich_vu
+        JOIN
+    loai_dich_vu ON dich_vu.ma_loai_dich_vu = loai_dich_vu.ma_loai_dich_vu
+        JOIN
+    bang_liet_ke ON dich_vu_di_kem.ma_dich_vu_di_kem = bang_liet_ke.ma_dich_vu_di_kem
+WHERE
+    bang_liet_ke.so_lan_su_dung = 1;
+  
+    -- 15
+CREATE VIEW bang_thanh_tich_nhan_vien AS
+    SELECT 
+        nhan_vien.ma_nhan_vien,
+        COUNT(hop_dong.ma_nhan_vien) AS so_luong_hop_dong
+    FROM
+        nhan_vien
+            JOIN
+        hop_dong ON nhan_vien.ma_nhan_vien = hop_dong.ma_nhan_vien
+    GROUP BY nhan_vien.ma_nhan_vien;
+	SELECT 
+    nhan_vien.ma_nhan_vien,
+    nhan_vien.ho_va_ten,
+    trinh_do.ten_trinh_do,
+    bo_phan.ten_bo_phan,
+    bang_thanh_tich_nhan_vien.so_luong_hop_dong
+FROM
+    nhan_vien
+        JOIN
+    bo_phan ON nhan_vien.ma_bo_phan = bo_phan.ma_bo_phan
+        JOIN
+    trinh_do ON nhan_vien.ma_trinh_do = trinh_do.ma_trinh_do
+        JOIN
+    bang_thanh_tich_nhan_vien ON nhan_vien.ma_nhan_vien = bang_thanh_tich_nhan_vien.ma_nhan_vien
+WHERE
+    so_luong_hop_dong < 3;
+    
+    
+
+    
+    
 
         
