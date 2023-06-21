@@ -39,12 +39,55 @@ WHERE
         AND chi_phi_khach_hang.tong_tien > 10000000;
 
 -- 18
-set foreign_key_checks=0;
-delete k from khach_hang k
-join hop_dong h
-on k.ma_khach_hang=h.ma_khach_hang
-where h.ngay_lam_hop_dong <'2021-01-01';
-set foreign_key_checks=1;
--- 19
 
+
+set foreign_key_checks=0;
+DELETE k FROM khach_hang k
+        JOIN
+    hop_dong h ON k.ma_khach_hang = h.ma_khach_hang 
+WHERE
+    h.ngay_lam_hop_dong < '2021-01-01';
+set foreign_key_checks=1;
+
+
+-- 19
+set sql_safe_updates=0;
+
+
+UPDATE dich_vu_di_kem
+        JOIN
+    (SELECT 
+        hop_dong_chi_tiet.ma_dich_vu_di_kem,
+            SUM(hop_dong_chi_tiet.so_luong) AS so_luong_thue
+    FROM
+        hop_dong_Chi_tiet
+    JOIN hop_dong ON hop_dong_chi_tiet.ma_hop_dong = hop_dong.ma_hop_dong
+    WHERE
+        YEAR(hop_dong.ngay_lam_hop_dong) = 2020
+    GROUP BY hop_dong_chi_tiet.ma_dich_vu_di_kem
+    HAVING so_luong_thue > 10) bang_dem ON dich_vu_di_kem.ma_dich_vu_di_kem = bang_dem.ma_dich_vu_di_kem 
+SET 
+    dich_vu_di_kem.gia = dich_vu_di_kem.gia * 2;
+
+set sql_safe_updates=1;
+
+
+-- 20
+(SELECT 
+    ma_nhan_vien AS ma,
+    ho_va_ten,
+    email,
+    so_dien_thoai,
+    ngay_sinh,
+    dia_chi
+FROM
+    nhan_vien) UNION (SELECT 
+    ma_khach_hang AS ma,
+    ho_ten,
+    email,
+    so_dien_thoai,
+    ngay_sinh,
+    dia_chi
+FROM
+    khach_hang)
 
