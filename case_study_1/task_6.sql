@@ -20,7 +20,7 @@ WHERE
         FROM
             khach_hang
         WHERE
-            dia_chi LIKE '%Vinh%' OR '%Quảng Ngãi%')
+            dia_chi LIKE '%Vinh%' OR '%Quảng Ngãi%');
 
 -- 12
 SELECT 
@@ -134,7 +134,7 @@ FROM
         JOIN
     bang_thanh_tich_nhan_vien ON nhan_vien.ma_nhan_vien = bang_thanh_tich_nhan_vien.ma_nhan_vien
 WHERE
-    so_luong_hop_dong < 3;
+    so_luong_hop_dong <= 3;
     
     
 
