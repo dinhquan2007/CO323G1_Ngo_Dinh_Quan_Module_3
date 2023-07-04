@@ -15,6 +15,7 @@ public class UserRepository implements IUserRepository {
     private static final String SELECT_ALL_USERS = "select * from users";
     private static final String DELETE_USERS_SQL = "delete from users where id=?;";
     private static final String UPDATE_USERS_SQL = "update users set name=?,email=?,count=? where id=?;";
+    private static final String SELECT_USERS_BY_COUNTRY = "select id,name,email,country from users where country like ?;";
 
     public UserRepository() {
     }
@@ -108,6 +109,31 @@ public class UserRepository implements IUserRepository {
             throw new RuntimeException(e);
         }
         return rowUpdated;
+    }
+
+    @Override
+    public List<User> searchByCountry(String countryShow) {
+        List<User> listUser=new ArrayList<>();
+        Connection connection=BaseRepository.getConnection();
+        try {
+            PreparedStatement statement=connection.prepareStatement(SELECT_USERS_BY_COUNTRY);
+            statement.setString(1,"%"+countryShow+"%");
+            ResultSet resultSet=statement.executeQuery();
+            while (resultSet.next()){
+                int id=resultSet.getInt("id");
+                String name=resultSet.getString("name");
+                String email=resultSet.getString("email");
+                String country=resultSet.getString("country");
+                listUser.add(new User(id,name,email,country));
+            }
+            connection.close();
+            if (listUser.size()==0){
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return listUser;
     }
 
 

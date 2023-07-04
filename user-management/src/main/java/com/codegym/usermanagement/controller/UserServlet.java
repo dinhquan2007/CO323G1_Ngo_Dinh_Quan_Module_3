@@ -40,6 +40,9 @@ public class UserServlet extends HttpServlet {
                     throw new RuntimeException(e);
                 }
                 break;
+            case "search":
+                showFormSearch(request,response);
+                break;
             default:
                 listUser(request, response);
                 break;
@@ -49,11 +52,11 @@ public class UserServlet extends HttpServlet {
     private void deleteUser(HttpServletRequest request, HttpServletResponse response) throws SQLException {
         int id = Integer.parseInt(request.getParameter("id"));
         userService.deleteUser(id);
-        List<User> listUser= userService.selectAllUser();
-        request.setAttribute("listUser",listUser);
-        RequestDispatcher dispatcher=request.getRequestDispatcher("user/list.jsp");
+        List<User> listUser = userService.selectAllUser();
+        request.setAttribute("listUser", listUser);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("user/list.jsp");
         try {
-            dispatcher.forward(request,response);
+            dispatcher.forward(request, response);
         } catch (ServletException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -65,6 +68,15 @@ public class UserServlet extends HttpServlet {
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("user/list.jsp");
         try {
             requestDispatcher.forward(request, response);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showFormSearch(HttpServletRequest request, HttpServletResponse response) {
+     RequestDispatcher dispatcher=request.getRequestDispatcher("user/search.jsp");
+        try {
+            dispatcher.forward(request,response);
         } catch (ServletException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -105,10 +117,19 @@ public class UserServlet extends HttpServlet {
                 case "edit":
                     updateUser(request, response);
                     break;
+                case "search":
+                    listUserSearch(request,response);
             }
         } catch (SQLException ex) {
             throw new ServletException(ex);
         }
+    }
+
+    private void listUserSearch(HttpServletRequest request, HttpServletResponse response) {
+        String country=request.getParameter("country");
+        List<User> userList=userService.searchByCountry(country);
+        request.setAttribute("useList",userList);
+
     }
 
     private void insertUser(HttpServletRequest request, HttpServletResponse response)

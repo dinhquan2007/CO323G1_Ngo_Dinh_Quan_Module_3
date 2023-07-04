@@ -34,4 +34,9 @@ public class UserService implements com.codegym.usermanagement.service.IUserServ
     public boolean updateUser(User user) throws SQLException {
         return userRepository.updateUser(user);
     }
+
+    @Override
+    public List<User> searchByCountry(String country) {
+        return userRepository.searchByCountry(country);
+    }
 }

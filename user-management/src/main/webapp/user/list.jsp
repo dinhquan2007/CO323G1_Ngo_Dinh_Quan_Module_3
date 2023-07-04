@@ -41,6 +41,9 @@
             </tr>
         </c:forEach>
     </table>
+    <a href="users?action=search">Search By Country</a><br/>
+    <a href="users?action=sort">Sort By Name</a><br/>
+
 </div>
 </body>
 </html>
