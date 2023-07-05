@@ -31,12 +31,17 @@ public class UserService implements com.codegym.usermanagement.service.IUserServ
     }
 
     @Override
-    public boolean updateUser(User user) throws SQLException {
-        return userRepository.updateUser(user);
+    public void updateUser(User user) throws SQLException {
+        userRepository.updateUser(user);
     }
 
     @Override
     public List<User> searchByCountry(String country) {
         return userRepository.searchByCountry(country);
+    }
+
+    @Override
+    public List<User> sortByName() {
+        return userRepository.sortByName();
     }
 }

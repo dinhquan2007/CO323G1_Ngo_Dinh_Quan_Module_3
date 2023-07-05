@@ -19,7 +19,7 @@
     </label>
     <input type="submit" value="Search">
 </form>
-<c:if test="${listUser!=null}">
+<c:if test="${userList != null}">
     <table>
         <tr>
             <th>ID</th>
@@ -27,7 +27,7 @@
             <th>Email</th>
             <th>Country</th>
         </tr>
-        <c:forEach var="user" items="${listUser}">
+        <c:forEach var="user" items="${userList}">
             <tr>
                 <td>${user.id}</td>
                 <td>${user.name}</td>
@@ -38,7 +38,7 @@
         </c:forEach>
     </table>
 </c:if>
-<h2><a href="/users"></a></h2>
+<h2><a href="users">return list</a></h2>
 
 </body>
 </html>

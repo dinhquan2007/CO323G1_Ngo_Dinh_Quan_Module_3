@@ -19,11 +19,10 @@
     </h2>
 </div>
 <div>
+    <form action="users?action=edit" method="post">
     <table>
         <caption><h2>Edit User</h2></caption>
-        <c:if test="${user!=null}">
-            <input type="hidden" name="id" value="<c:out value="${user.id}" />">
-        </c:if>
+            <input type="hidden" name="id" value="<c:out value='${user.id}' />"/>
         <tr>
             <th>User Name:</th>
             <td>
@@ -54,6 +53,7 @@
             </td>
         </tr>
     </table>
+    </form>
 </div>
 
 

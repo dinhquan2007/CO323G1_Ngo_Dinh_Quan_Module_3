@@ -11,11 +11,13 @@ import java.util.List;
 
 public class UserRepository implements IUserRepository {
     private static final String INSERT_USERS_SQL = "INSERT INTO users(name,email,country)VALUES(?,?,?);";
-    private static final String SELECT_USER_BY_ID = "select id,name,email,country from users where=?";
+    private static final String SELECT_USER_BY_ID = "select id,name,email,country from users where id=?";
     private static final String SELECT_ALL_USERS = "select * from users";
     private static final String DELETE_USERS_SQL = "delete from users where id=?;";
-    private static final String UPDATE_USERS_SQL = "update users set name=?,email=?,count=? where id=?;";
+    private static final String UPDATE_USERS_SQL = "update users set name=?,email=?,country=? where id=?;";
     private static final String SELECT_USERS_BY_COUNTRY = "select id,name,email,country from users where country like ?;";
+    private static final String SELECT_USERS_ORDER_BY_NAME = "select id,name,email,country from users order by name;";
+
 
     public UserRepository() {
     }
@@ -95,8 +97,7 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public boolean updateUser(User user) throws SQLException {
-        boolean rowUpdated;
+    public void updateUser(User user) throws SQLException {
         try {
             Connection connection = BaseRepository.getConnection();
             PreparedStatement statement = connection.prepareStatement(UPDATE_USERS_SQL);
@@ -104,34 +105,57 @@ public class UserRepository implements IUserRepository {
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getCountry());
             statement.setInt(4, user.getId());
-            rowUpdated = statement.executeUpdate() > 0;
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return rowUpdated;
     }
 
     @Override
     public List<User> searchByCountry(String countryShow) {
-        List<User> listUser=new ArrayList<>();
-        Connection connection=BaseRepository.getConnection();
+        List<User> listUser = new ArrayList<>();
+        Connection connection = BaseRepository.getConnection();
         try {
-            PreparedStatement statement=connection.prepareStatement(SELECT_USERS_BY_COUNTRY);
-            statement.setString(1,"%"+countryShow+"%");
-            ResultSet resultSet=statement.executeQuery();
-            while (resultSet.next()){
-                int id=resultSet.getInt("id");
-                String name=resultSet.getString("name");
-                String email=resultSet.getString("email");
-                String country=resultSet.getString("country");
-                listUser.add(new User(id,name,email,country));
+            PreparedStatement statement = connection.prepareStatement(SELECT_USERS_BY_COUNTRY);
+            statement.setString(1, "%" + countryShow + "%");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                String country = resultSet.getString("country");
+                listUser.add(new User(id, name, email, country));
             }
             connection.close();
-            if (listUser.size()==0){
+            if (listUser.size() == 0) {
                 return null;
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+        return listUser;
+    }
+
+    @Override
+    public List<User> sortByName() {
+        List<User> listUser = new ArrayList<>();
+        Connection connection = BaseRepository.getConnection();
+        try {
+            PreparedStatement statement = connection.prepareStatement(SELECT_USERS_ORDER_BY_NAME);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                String country = resultSet.getString("country");
+                listUser.add(new User(id, name, email, country));
+            }
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if (listUser.size() == 0) {
+            return null;
         }
         return listUser;
     }

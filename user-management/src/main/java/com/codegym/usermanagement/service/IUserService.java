@@ -2,6 +2,8 @@ package com.codegym.usermanagement.service;
 
 import com.codegym.usermanagement.model.User;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -14,7 +16,10 @@ public interface IUserService {
 
     public boolean deleteUser(int id) throws SQLException;
 
-    public boolean updateUser(User user) throws SQLException;
+    public void updateUser(User user) throws SQLException;
 
     List<User> searchByCountry(String country);
+
+
+    List<User> sortByName();
 }
